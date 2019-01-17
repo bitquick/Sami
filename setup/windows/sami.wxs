@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
+    <Product Id="400840D9-F4B3-43C6-A8F5-25185FB02911" UpgradeCode="905F5EA0-3C7E-457F-8353-E159CFCFB385" Version="1.0.0.0" Language="1033" Name="Sami PHP Documentation Generator" Manufacturer="Bitquick">
+        <Package InstallerVersion="300" Compressed="yes"/>
+        <Media Id="1" Cabinet="sami.cab" EmbedCab="yes" />
+        <Property Id="ENABLEEV" Value="1" Secure="yes" />
+
+        <!-- Step 1: Define the directory structure -->
+        <Directory Id="TARGETDIR" Name="SourceDir">
+            <Directory Id="ProgramFilesFolder">
+                <Directory Id="APPLICATIONROOTDIRECTORY" Name="Sami"/>
+            </Directory>
+        </Directory>
+
+        <!-- Step 2: Add files to your installer package -->
+        <DirectoryRef Id="APPLICATIONROOTDIRECTORY">
+            <Component Id="sami.phar" Guid="472E511C-9390-447F-980E-D48EFCC39719">
+                <File Id="sami.phar" Source=".\sami.phar" KeyPath="yes" Checksum="yes"/>
+            </Component>
+            <Component Id="sami.bat" Guid="72181E7E-C441-4D81-9958-363E19516018">
+                <File Id="sami.bat" Source=".\sami.bat" KeyPath="yes"/>
+            </Component>
+            <Component Id="sami.sh" Guid="94DA0AAA-6E38-403C-B9EF-FE7205B39EA3">
+                <File Id="sami.sh" Source=".\sami" KeyPath="yes"/>
+            </Component>
+            <Component Id="UpdatePath" Guid="A38BF7DB-6192-4424-9F91-E103769F73C8">
+              <CreateFolder />
+              <Environment Id="PATH" Name="PATH" Value="[APPLICATIONROOTDIRECTORY]" Permanent="no" Part="last" Action="set" System="yes" />
+            </Component>
+        </DirectoryRef>
+
+        <!-- STep 3: Tell WiX to install the files -->
+        <Feature Id="MainApplication" Title="Sami PHP Documentation Generator" Level="1">
+            <ComponentRef Id="sami.phar" />
+            <ComponentRef Id="sami.bat" />
+            <ComponentRef Id="sami.sh" />
+            <ComponentRef Id="UpdatePath" />
+        </Feature>
+
+        <InstallExecuteSequence>
+          <WriteEnvironmentStrings>ENABLEEV=1</WriteEnvironmentStrings>
+        </InstallExecuteSequence>
+
+    </Product>
+</Wix>
